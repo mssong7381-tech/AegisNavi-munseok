@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AegisNavi-Pro | 선박정비 지능형 통합 관제 AI</title>
+  <style>
+    :root {
+      --bg-base: #0c1222;
+      --bg-surface: #131c31;
+      --bg-surface-elevated: #1a2642;
+      --bg-sidebar: #090e1a;
+      --bg-card: #152037;
+      --bg-bubble-user: #1e3a8a;
+      --border-subtle: #243456;
+      --border-accent: #3b82f6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent-primary: #38bdf8;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #2563eb;
+      --accent-purple: #8b5cf6;
+      --status-green: #10b981;
+      --status-green-bg: rgba(16, 185, 129, 0.15);
+      --status-amber: #f59e0b;
+      --status-amber-bg: rgba(245, 158, 11, 0.15);
+      --status-red: #ef4444;
+      --status-red-bg: rgba(239, 68, 68, 0.15);
+      --input-bg: #111a2e;
+      --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Pretendard", "Segoe UI", Roboto, "Noto Sans KR", Helvetica, Arial, sans-serif;
+    }
+
+    [data-theme="light"] {
+      --bg-base: #f1f5f9;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #f8fafc;
+      --bg-sidebar: #e2e8f0;
+      --bg-card: #ffffff;
+      --bg-bubble-user: #e0f2fe;
+      --border-subtle: #cbd5e1;
+      --border-accent: #2563eb;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      --accent-primary: #0284c7;
+      --accent-cyan: #0891b2;
+      --accent-blue: #1d4ed8;
+      --accent-purple: #7c3aed;
+      --status-green: #059669;
+      --status-green-bg: #d1fae5;
+      --status-amber: #d97706;
+      --status-amber-bg: #fef3c7;
+      --status-red: #dc2626;
+      --status-red-bg: #fee2e2;
+      --input-bg: #ffffff;
+      --shadow-soft: 0 10px 20px -5px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* ==========================================================================
+       1. 좌측 사이드바 (Sidebar)
+       ========================================================================== */
+    #sidebar {
+      width: 310px;
+      background-color: var(--bg-sidebar);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 30;
+    }
+
+    #sidebar.collapsed {
+      width: 0;
+      overflow: hidden;
+      border-right: none;
+    }
+
+    /* Brand Header */
+    .brand-box {
+      padding: 18px 18px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .brand-logo-gem {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #0284c7, #2563eb, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+      flex-shrink: 0;
+    }
+
+    .brand-text-col {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .brand-badge-pro {
+      font-size: 9px;
+      font-weight: 800;
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      padding: 1px 5px;
+      border-radius: 4px;
+      -webkit-text-fill-color: #38bdf8;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* New Chat Button */
+    .new-chat-container {
+      padding: 14px 16px 10px;
+    }
+
+    .btn-new-chat {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 16px;
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .btn-new-chat:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+    }
+
+    /* History Search & Filters */
+    .history-controls {
+      padding: 4px 16px 10px;
+    }
+
+    .history-search-input {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .history-search-input:focus {
+      border-color: var(--accent-primary);
+    }
+
+    /* History Session List */
+    .history-scroll-box {
+      flex: 1;
+      overflow-y: auto;
+      padding: 6px 14px;
+    }
+
+    .history-group-header {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      margin: 12px 6px 6px;
+    }
+
+    .session-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 12px;
+      margin-bottom: 3px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .session-item:hover {
+      background: var(--bg-surface-elevated);
+      color: var(--text-main);
+    }
+
+    .session-item.active {
+      background: rgba(56, 189, 248, 0.12);
+      border-left: 3px solid var(--accent-primary);
+      color: var(--accent-primary);
+      font-weight: 600;
+    }
+
+    .session-item-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+
+    .session-turn-tag {
+      font-size: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 5px;
+      border-radius: 4px;
+      margin-left: 6px;
+      color: var(--text-dim);
+    }
+
+    .session-del-btn {
+      opacity: 0;
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 13px;
+      cursor: pointer;
+      padding: 2px 5px;
+      border-radius: 4px;
+      transition: opacity 0.15s, color 0.15s;
+    }
+
+    .session-item:hover .session-del-btn {
+      opacity: 1;
+    }
+
+    .session-del-btn:hover {
+      color: var(--status-red);
+    }
+
+    /* Sidebar Footer Status */
+    .sidebar-footer-panel {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+      font-size: 11.5px;
+    }
+
+    .engine-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .status-pulse-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--status-green);
+    }
+
+    .pulse-dot-green {
+      width: 7px;
+      height: 7px;
+      background: var(--status-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--status-green);
+      animation: pulse-ring 2s infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.25); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    /* ==========================================================================
+       2. 메인 컨텐츠 영역 (Header & Viewport)
+       ========================================================================== */
+    #main-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+      background-color: var(--bg-base);
+      position: relative;
+    }
+
+    /* Top Navigation Header */
+    header {
+      height: 64px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: var(--bg-surface);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .header-left-col {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-toggle-sidebar {
+      background: none;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      border-radius: 8px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-toggle-sidebar:hover {
+      color: var(--text-main);
+      border-color: var(--border-accent);
+      background: var(--bg-surface-elevated);
+    }
+
+    .header-ai-label {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-ai-name {
+      font-size: 15px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-ai-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(14, 165, 233, 0.15);
+      border: 1px solid rgba(14, 165, 233, 0.35);
+      color: #38bdf8;
+      padding: 2px 7px;
+      border-radius: 20px;
+    }
+
+    .header-ai-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Header Controls (Toggles) */
+    .header-right-col {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .control-switch-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .switch-ui {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      background: var(--border-subtle);
+      border-radius: 20px;
+      transition: background 0.2s;
+    }
+
+    .switch-ui::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    input[type="checkbox"]:checked + .switch-ui {
+      background: var(--accent-blue);
+    }
+
+    input[type="checkbox"]:checked + .switch-ui::after {
+      transform: translateX(16px);
+    }
+
+    .btn-theme-switch {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn-theme-switch:hover {
+      border-color: var(--border-accent);
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       3. 메시지 뷰포트 (Messages Viewport)
+       ========================================================================== */
+    #messages-viewport {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Welcome Hero Section */
+    #welcome-hero {
+      max-width: 880px;
+      width: 100%;
+      margin: 20px auto 10px;
+      padding: 32px 30px;
+      background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.12) 0%, rgba(37, 99, 235, 0.05) 45%, rgba(19, 28, 49, 0) 80%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+    }
+
+    .hero-compass-icon {
+      font-size: 44px;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: float-compass 3s ease-in-out infinite;
+    }
+
+    @keyframes float-compass {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(5deg); }
+    }
+
+    .hero-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #f8fafc 30%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 680px;
+      margin: 0 auto 26px;
+    }
+
+    .hero-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      text-align: left;
+    }
+
+    .hero-prompt-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .hero-prompt-card:hover {
+      border-color: var(--accent-primary);
+      background: var(--bg-surface-elevated);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -4px rgba(56, 189, 248, 0.15);
+    }
+
+    .card-category-tag {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-query-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+
+    /* Message Bubbles Container */
+    .msg-thread-item {
+      max-width: 880px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* User Question Card */
+    .user-msg-row {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .user-msg-bubble {
+      max-width: 780px;
+      background: var(--bg-bubble-user);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+      border-radius: 16px 16px 4px 16px;
+      padding: 16px 20px;
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    [data-theme="light"] .user-msg-bubble {
+      color: #0f172a;
+      border-color: #bfdbfe;
+    }
+
+    .user-msg-text-primary {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .user-msg-text-ko {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.2);
+    }
+
+    [data-theme="light"] .user-msg-text-ko {
+      color: #334155;
+      border-top-color: #cbd5e1;
+    }
+
+    /* AI Response Card */
+    .ai-msg-row {
+      display: flex;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .ai-avatar-gem {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7, #3b82f6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .ai-response-envelope {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px 16px 16px 16px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    /* Meta Ribbon on AI Card */
+    .ai-meta-ribbon {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 10px;
+      font-size: 11.5px;
+    }
+
+    .route-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .route-badge.aggregate {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--accent-primary);
+    }
+
+    .route-badge.procedure {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: var(--status-green);
+    }
+
+    .latency-pill {
+      color: var(--text-dim);
+      font-family: monospace;
+      font-size: 11px;
+    }
+
+    /* Follow-up rewritten banner */
+    .rewrite-callout {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 3px solid var(--status-amber);
+      padding: 8px 12px;
+      border-radius: 0 6px 6px 0;
+      font-size: 12px;
+      color: var(--status-amber);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       4. 절차형 / 집계형 / 기권별 렌더링 카드 스타일
+       ========================================================================== */
+
+    /* 4-1. 절차형 단계별 스텝 카드 (Procedural Step Cards) */
+    .step-card-modern {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px 18px;
+      display: flex;
+      gap: 14px;
+      transition: border-color 0.2s;
+    }
+
+    .step-card-modern:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .step-index-badge {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 12.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .step-action-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+
+    .step-action-korean {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .step-footer-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed var(--border-subtle);
+      font-size: 11.5px;
+    }
+
+    .verified-chip {
+      background: var(--status-green-bg);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--status-green);
+      font-weight: 800;
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .citation-source-text {
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+
+    .quoted-string-box {
+      background: rgba(0, 0, 0, 0.15);
+      border-left: 2px solid var(--accent-cyan);
+      padding: 6px 10px;
+      font-size: 11.5px;
+      font-style: italic;
+      color: var(--text-muted);
+      border-radius: 0 4px 4px 0;
+      margin-top: 4px;
+    }
+
+    /* 4-2. 집계형 데이터 테이블 (Aggregate Table) */
+    .aggregate-result-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-main);
+      white-space: pre-wrap;
+    }
+
+    .modern-table-frame {
+      max-height: 280px;
+      overflow-y: auto;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    table.modern-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    table.modern-table th {
+      background: var(--bg-surface-elevated);
+      color: var(--accent-primary);
+      font-weight: 700;
+      padding: 9px 12px;
+      position: sticky;
+      top: 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    table.modern-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--text-main);
+    }
+
+    [data-theme="light"] table.modern-table td {
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    table.modern-table tr:hover {
+      background: rgba(56, 189, 248, 0.04);
+    }
+
+    /* 4-3. 불확실 / 근거 부재 기권 카드 (알수없음 Alert Box) */
+    .abstention-hero-box {
+      background: radial-gradient(circle at top left, rgba(239, 68, 68, 0.15) 0%, rgba(239, 68, 68, 0.04) 100%);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      border-left: 4px solid var(--status-red);
+      border-radius: 12px;
+      padding: 18px 20px;
+      color: var(--text-main);
+    }
+
+    .abstention-header-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .abstention-pill-flag {
+      background: var(--status-red);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    .abstention-title-strong {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--status-red);
+    }
+
+    .abstention-body-message {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+
+    .abstention-reason-note {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed rgba(239, 68, 68, 0.3);
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* 4-4. 투명성 세부 검증 아코디언 (Inspector Accordion) */
+    .inspector-box {
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .inspector-trigger {
+      padding: 8px 12px;
+      background: var(--bg-surface-elevated);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--accent-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .inspector-trigger:hover {
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .inspector-content-panel {
+      display: none;
+      padding: 12px;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 11.5px;
+    }
+
+    .inspector-content-panel.open {
+      display: block;
+    }
+
+    .sql-code-block {
+      background: #090e1a;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-family: Consolas, monospace;
+      color: #38bdf8;
+      font-size: 11.5px;
+      white-space: pre-wrap;
+      margin-top: 4px;
+    }
+
+    /* ==========================================================================
+       5. 하단 플로팅 인풋 독 (Floating Input Dock)
+       ========================================================================== */
+    #input-dock {
+      padding: 14px 24px 20px;
+      background: linear-gradient(180deg, transparent 0%, var(--bg-base) 35%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .floating-input-capsule {
+      max-width: 880px;
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      padding: 8px 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .floating-input-capsule:focus-within {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+    }
+
+    #chat-textarea {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: var(--text-main);
+      font-family: inherit;
+      resize: none;
+      min-height: 24px;
+      max-height: 120px;
+      line-height: 1.5;
+    }
+
+    #chat-textarea::placeholder {
+      color: var(--text-dim);
+    }
+
+    .btn-send-airplane {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: transform 0.15s, background 0.2s;
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+
+    .btn-send-airplane:hover {
+      background: linear-gradient(135deg, #0369a1, #1d4ed8);
+      transform: scale(1.05);
+    }
+
+    .btn-send-airplane:disabled {
+      background: var(--border-subtle);
+      color: var(--text-dim);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .dock-subtext-info {
+      font-size: 11px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Modal Backdrop */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content-card {
+      width: 540px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px 26px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .btn-close-modal {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      #sidebar {
+        position: absolute;
+        height: 100%;
+      }
+      .hero-cards-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- ======================================================================
+       1. 사이드바 (Sidebar)
+       ====================================================================== -->
+  <aside id="sidebar">
+    <div class="brand-box">
+      <div class="brand-logo-gem">⚓</div>
+      <div class="brand-text-col">
+        <div class="brand-title">
+          <span>AegisNavi</span>
+          <span class="brand-badge-pro">PRO</span>
+        </div>
+        <div class="brand-sub">Marine Engineering AI</div>
+      </div>
+    </div>
+
+    <div class="new-chat-container">
+      <button class="btn-new-chat" id="btn-new-chat">
+        <span style="font-size:16px;">+</span> 새 정비 대화 시작
+      </button>
+    </div>
+
+    <div class="history-controls">
+      <input type="text" id="history-search" class="history-search-input" placeholder="🔍 이전 기록 검색..." autocomplete="off">
+    </div>
+
+    <div class="history-scroll-box">
+      <div class="history-group-header">최근 대화 히스토리 (Recent Chats)</div>
+      <div id="session-history-list"></div>
+    </div>
+
+    <div class="sidebar-footer-panel">
+      <div class="engine-status-row">
+        <span>로컬 추론 엔진</span>
+        <span class="status-pulse-pill"><span class="pulse-dot-green"></span> Ollama Active</span>
+      </div>
+      <div class="engine-status-row">
+        <span>연동 모델</span>
+        <strong style="color:var(--accent-primary);">qwen3:1.7b (1.4GB)</strong>
+      </div>
+      <div class="engine-status-row">
+        <span>DuckDB 정비이력</span>
+        <strong style="color:var(--text-main);">26,561건 (6척 선박)</strong>
+      </div>
+      <div class="engine-status-row">
+        <span>BM25 작업지침</span>
+        <strong style="color:var(--status-green);">19,986건 색인</strong>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ======================================================================
+       2. 메인 컨텐츠 영역 (Header & Viewport)
+       ====================================================================== -->
+  <main id="main-chat">
+    <header>
+      <div class="header-left-col">
+        <button class="btn-toggle-sidebar" id="toggle-sidebar" title="사이드바 열기/닫기">☰</button>
+        <div class="header-ai-label">
+          <div class="header-ai-name">
+            <span>✦ AegisNavi-Core</span>
+            <span class="header-ai-badge">Ollama qwen3:1.7b</span>
+          </div>
+          <div class="header-ai-desc">선박정비 전문 지능형 통합 관제 에이전트 · Local 127.0.0.1:11434</div>
+        </div>
+      </div>
+
+      <div class="header-right-col">
+        <!-- Bilingual Toggle -->
+        <label class="control-switch-item" title="질문과 답변을 한/영 실시간 병기하여 표시합니다.">
+          <span>한/영 동시 병기</span>
+          <input type="checkbox" id="toggle-bilingual" style="display:none;" checked>
+          <span class="switch-ui"></span>
+        </label>
+
+        <!-- Transparency Inspector Toggle -->
+        <label class="control-switch-item" title="실행된 SQL 쿼리 및 BM25 인용 원문을 표시합니다.">
+          <span>팩트 검증기</span>
+          <input type="checkbox" id="toggle-inspector" style="display:none;" checked>
+          <span class="switch-ui"></span>
+        </label>
+
+        <!-- Theme Toggle Button -->
+        <button class="btn-theme-switch" id="btn-theme-toggle" title="다크/라이트 테마 전환">
+          <span id="theme-icon">🌙</span> <span id="theme-label">Dark</span>
+        </button>
+
+        <!-- Settings Modal Button -->
+        <button class="btn-toggle-sidebar" id="btn-open-settings" title="시스템 설정">⚙</button>
+      </div>
+    </header>
+
+    <!-- Message Viewport -->
+    <div id="messages-viewport">
+      <!-- Welcome Hero Card (대화가 없을 때 표시) -->
+      <div id="welcome-hero">
+        <div class="hero-compass-icon">🧭</div>
+        <h2 class="hero-title">AegisNavi-Pro 선박정비 지능형 시스템</h2>
+        <p class="hero-desc">
+          외부 네트워크나 위성통신 연결 없이 100% 로컬 환경에서 선박 정비 통계(Text-to-SQL)와<br>
+          제조사 공식 작업 지침 및 고장 조치 절차(BM25 RAG)를 정밀 분석하여 제공합니다.<br>
+          <strong>※ 데이터베이스 및 매뉴얼에 근거가 없는 내용은 '알수없음'으로 정확히 기권합니다.</strong>
+        </p>
+
+        <div class="hero-cards-grid">
+          <div class="hero-prompt-card" onclick="sendQuickQuery('2024년 선박별 누적 정비 비용 및 작업 건수 순위를 보여줘')">
+            <span class="card-category-tag">📊 집계형 · 선박별 순위 분석</span>
+            <span class="card-query-text">2024년 선박별 누적 정비 비용 및 작업 건수 순위를 보여줘</span>
+          </div>
+          <div class="hero-prompt-card" onclick="sendQuickQuery('한바다호의 2024년 전체 정비 작업 건수는 몇 건인가요?')">
+            <span class="card-category-tag">📊 집계형 · 특정 선박 실적</span>
+            <span class="card-query-text">한바다호의 2024년 전체 정비 작업 건수는 몇 건인가요?</span>
+          </div>
+          <div class="hero-prompt-card" onclick="sendQuickQuery('주기관 실린더 커버 분해 절차와 규정 유압 토크값은?')">
+            <span class="card-category-tag">🔧 절차형 · 주기관 정기 오버홀</span>
+            <span class="card-query-text">주기관 실린더 커버 분해 절차와 규정 유압 토크값은?</span>
+          </div>
+          <div class="hero-prompt-card" onclick="sendQuickQuery('원자로 냉각재 순환 펌프의 정비 지침은?')">
+            <span class="card-category-tag" style="color:var(--status-red);">🛡️ 기권 판정 · 알수없음 검증</span>
+            <span class="card-query-text">원자로 냉각재 순환 펌프의 정비 지침은? (근거 부재 시 알수없음)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Input Dock -->
+    <div id="input-dock">
+      <div class="floating-input-capsule">
+        <textarea id="chat-textarea" rows="1" placeholder="선박 정비 작업, 기기 점검 절차 또는 통계 질문을 입력하세요... (Enter 전송, Shift+Enter 줄바꿈)"></textarea>
+        <button class="btn-send-airplane" id="btn-send" title="질의 전송">➤</button>
+      </div>
+      <div class="dock-subtext-info">
+        <span>⚓ AegisNavi-Pro 로컬 오프라인 전용 관제 시스템</span>
+        <span>•</span>
+        <span>DuckDB 26,561건 정비 문서 및 19,986건 기술지침 연동</span>
+        <span>•</span>
+        <span>엄격한 팩트 검증(Fact-Grounding) 모드 상시 가동</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ======================================================================
+       3. 설정 및 시스템 진단 모달 (Modal)
+       ====================================================================== -->
+  <div class="modal-overlay" id="modal-settings">
+    <div class="modal-content-card">
+      <div class="modal-title-row">
+        <span>⚙️ AegisNavi-Pro 시스템 환경 정보</span>
+        <button class="btn-close-modal" onclick="closeSettingsModal()">✕</button>
+      </div>
+      <div style="font-size:13px; line-height:1.8; color:var(--text-muted);">
+        <p>• <strong>시스템 명칭:</strong> AegisNavi-Pro (Marine Engineering AI Platform)</p>
+        <p>• <strong>로컬 추론 엔진:</strong> Ollama (http://127.0.0.1:11434)</p>
+        <p>• <strong>연동 LLM 모델:</strong> <strong>qwen3:1.7b</strong> (1.4 GB Q4_K_M GGUF 양자화)</p>
+        <p>• <strong>추론 하이퍼파라미터:</strong> Temperature: 0.0, Top-K: 1, Seed: 42 (결정론적 추론)</p>
+        <p>• <strong>데이터베이스 엔진:</strong> DuckDB In-Process Engine (읽기 전용 6개 테이블)</p>
+        <p>• <strong>BM25 검색 색인:</strong> 19,986건 선박 정비 서술 메모리 적재 (k1=1.5, b=0.75, 3x Title)</p>
+        <p>• <strong>네트워크 보안:</strong> 100% 완전 오프라인 (외부 인터넷 및 위성 통신 없음)</p>
+        <p>• <strong>안전 기권 규칙:</strong> 조건 F 충족 시 허구 생성 차단 및 '알수없음' 고정 응답</p>
+      </div>
+      <div style="margin-top:20px; text-align:right;">
+        <button class="btn-new-chat" style="width:auto; padding:8px 20px; display:inline-flex;" onclick="closeSettingsModal()">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       4. 프론트엔드 핵심 로직 스크립트
+       ====================================================================== -->
+  <script>
+    // State Variables
+    let activeSessionId = null;
+    let chatHistory = [];
+    let isProcessing = false;
+    let allSessions = [];
+
+    // DOM Elements
+    const textarea = document.getElementById("chat-textarea");
+    const btnSend = document.getElementById("btn-send");
+    const viewport = document.getElementById("messages-viewport");
+    const welcomeHero = document.getElementById("welcome-hero");
+    const sessionListEl = document.getElementById("session-history-list");
+    const historySearch = document.getElementById("history-search");
+    const toggleBilingual = document.getElementById("toggle-bilingual");
+    const toggleInspector = document.getElementById("toggle-inspector");
+    const btnThemeToggle = document.getElementById("btn-theme-toggle");
+    const themeIcon = document.getElementById("theme-icon");
+    const themeLabel = document.getElementById("theme-label");
+
+    // Theme Management
+    let currentTheme = "dark";
+    btnThemeToggle.addEventListener("click", () => {
+      currentTheme = currentTheme === "dark" ? "light" : "dark";
+      document.body.setAttribute("data-theme", currentTheme);
+      themeIcon.textContent = currentTheme === "dark" ? "🌙" : "☀️";
+      themeLabel.textContent = currentTheme === "dark" ? "Dark" : "Light";
+      localStorage.setItem("aegis_theme", currentTheme);
+    });
+
+    // Auto-expand Textarea
+    textarea.addEventListener("input", function() {
+      this.style.height = "auto";
+      this.style.height = Math.min(this.scrollHeight, 120) + "px";
+    });
+
+    textarea.addEventListener("keydown", function(e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        triggerSubmit();
+      }
+    });
+
+    btnSend.addEventListener("click", triggerSubmit);
+
+    document.getElementById("toggle-sidebar").addEventListener("click", () => {
+      document.getElementById("sidebar").classList.toggle("collapsed");
+    });
+
+    document.getElementById("btn-new-chat").addEventListener("click", () => {
+      startFreshSession();
+    });
+
+    document.getElementById("btn-open-settings").addEventListener("click", () => {
+      document.getElementById("modal-settings").style.display = "flex";
+    });
+
+    function closeSettingsModal() {
+      document.getElementById("modal-settings").style.display = "none";
+    }
+
+    // Quick Prompt Trigger
+    function sendQuickQuery(queryText) {
+      textarea.value = queryText;
+      triggerSubmit();
+    }
+
+    // History Search Filter
+    historySearch.addEventListener("input", function() {
+      const kw = this.value.trim().toLowerCase();
+      renderSessionHistory(kw);
+    });
+
+    // Fresh Session
+    function startFreshSession() {
+      activeSessionId = "session_" + Date.now();
+      chatHistory = [];
+      viewport.innerHTML = "";
+      viewport.appendChild(welcomeHero);
+      welcomeHero.style.display = "block";
+      renderSessionHistory();
+      textarea.focus();
+    }
+
+    // Load History from Backend API
+    async function loadSessionsFromBackend() {
+      try {
+        const res = await fetch("/api/history");
+        const data = await res.json();
+        if (data.status === "ok" && data.sessions) {
+          allSessions = data.sessions;
+          renderSessionHistory();
+          if (allSessions.length > 0 && !activeSessionId) {
+            switchSession(allSessions[0].id);
+          } else if (!activeSessionId) {
+            startFreshSession();
+          }
+        }
+      } catch (e) {
+        const local = localStorage.getItem("aegis_pro_sessions");
+        allSessions = local ? JSON.parse(local) : [];
+        renderSessionHistory();
+        if (!activeSessionId) startFreshSession();
+      }
+    }
+
+    // Render History List
+    function renderSessionHistory(filterKeyword = "") {
+      sessionListEl.innerHTML = "";
+      const filtered = allSessions.filter(s => {
+        if (!filterKeyword) return true;
+        return (s.title || "").toLowerCase().includes(filterKeyword);
+      });
+
+      if (filtered.length === 0) {
+        sessionListEl.innerHTML = `<div style="font-size:11.5px; color:var(--text-dim); padding:10px 4px;">일치하는 대화 기록이 없습니다.</div>`;
+        return;
+      }
+
+      filtered.forEach(sess => {
+        const div = document.createElement("div");
+        div.className = "session-item" + (sess.id === activeSessionId ? " active" : "");
+        const turnCount = sess.messages ? Math.ceil(sess.messages.length / 2) : 1;
+        div.innerHTML = `
+          <div class="session-item-title" title="${escapeHtml(sess.title)}">${escapeHtml(sess.title)}</div>
+          <span class="session-turn-tag">${turnCount} 질의</span>
+          <button class="session-del-btn" title="삭제" onclick="event.stopPropagation(); removeSession('${sess.id}')">✕</button>
+        `;
+        div.addEventListener("click", () => switchSession(sess.id));
+        sessionListEl.appendChild(div);
+      });
+    }
+
+    // Switch Session
+    function switchSession(sessionId) {
+      const sess = allSessions.find(s => s.id === sessionId);
+      if (!sess) return;
+      activeSessionId = sess.id;
+      chatHistory = sess.messages || [];
+      viewport.innerHTML = "";
+
+      if (chatHistory.length === 0) {
+        viewport.appendChild(welcomeHero);
+        welcomeHero.style.display = "block";
+      } else {
+        welcomeHero.style.display = "none";
+        chatHistory.forEach(item => {
+          if (item.role === "user") {
+            appendUserCard(item.text, item.koText, false);
+          } else {
+            appendAICard(item.data, false);
+          }
+        });
+      }
+      renderSessionHistory();
+    }
+
+    // Save Session
+    async function persistCurrentSession(title) {
+      if (!activeSessionId) activeSessionId = "session_" + Date.now();
+      const existing = allSessions.find(s => s.id === activeSessionId);
+      const sessionObj = {
+        id: activeSessionId,
+        title: title || (existing ? existing.title : "새 정비 질의"),
+        updated_at: new Date().toISOString(),
+        messages: chatHistory
+      };
+      const idx = allSessions.findIndex(s => s.id === activeSessionId);
+      if (idx >= 0) allSessions[idx] = sessionObj;
+      else allSessions.unshift(sessionObj);
+
+      localStorage.setItem("aegis_pro_sessions", JSON.stringify(allSessions));
+
+      try {
+        await fetch("/api/history", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(sessionObj)
+        });
+      } catch (e) {}
+      renderSessionHistory();
+    }
+
+    // Delete Session
+    async function removeSession(sessionId) {
+      allSessions = allSessions.filter(s => s.id !== sessionId);
+      localStorage.setItem("aegis_pro_sessions", JSON.stringify(allSessions));
+      try {
+        await fetch(`/api/history?id=${sessionId}`, { method: "DELETE" });
+      } catch (e) {}
+
+      if (activeSessionId === sessionId) {
+        startFreshSession();
+      } else {
+        renderSessionHistory();
+      }
+    }
+
+    // Submit Query
+    async function triggerSubmit() {
+      const query = textarea.value.trim();
+      if (!query || isProcessing) return;
+
+      isProcessing = true;
+      btnSend.disabled = true;
+      welcomeHero.style.display = "none";
+
+      const bilingualOn = toggleBilingual.checked;
+      const koreanNotice = getKoreanSubtitle(query);
+
+      appendUserCard(query, koreanNotice, true);
+      textarea.value = "";
+      textarea.style.height = "auto";
+
+      // Context turns for follow-up interpretation
+      const historyTurns = [];
+      for (let i = 0; i < chatHistory.length - 1; i += 2) {
+        if (chatHistory[i] && chatHistory[i+1]) {
+          historyTurns.push({
+            user: chatHistory[i].text,
+            assistant: chatHistory[i+1].text || ""
+          });
+        }
+      }
+
+      // Temporary Loading Card
+      const loadingId = "loading_" + Date.now();
+      appendLoadingCard(loadingId);
+
+      try {
+        const payload = {
+          query: query,
+          history: historyTurns,
+          dual_language: bilingualOn
+        };
+
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        removeElement(loadingId);
+        appendAICard(data, true);
+
+        const firstTitle = chatHistory.length <= 2 ? (query.length > 25 ? query.substring(0, 25) + "..." : query) : undefined;
+        persistCurrentSession(firstTitle);
+      } catch (err) {
+        removeElement(loadingId);
+        appendErrorCard("로컬 서버 통신 오류: " + err.message);
+      } finally {
+        isProcessing = false;
+        btnSend.disabled = false;
+        textarea.focus();
+      }
+    }
+
+    // UI Append Helpers
+    function appendUserCard(text, koSubtitle, push) {
+      if (push) {
+        chatHistory.push({ role: "user", text: text, koText: koSubtitle });
+      }
+      const showBilingual = toggleBilingual.checked;
+      const div = document.createElement("div");
+      div.className = "msg-thread-item";
+      div.innerHTML = `
+        <div class="user-msg-row">
+          <div class="user-msg-bubble">
+            <div class="user-msg-text-primary">${escapeHtml(text)}</div>
+            ${showBilingual && koSubtitle ? `<div class="user-msg-text-ko">${escapeHtml(koSubtitle)}</div>` : ""}
+          </div>
+        </div>
+      `;
+      viewport.appendChild(div);
+      viewport.scrollTop = viewport.scrollHeight;
+    }
+
+    function appendLoadingCard(id) {
+      const div = document.createElement("div");
+      div.className = "msg-thread-item";
+      div.id = id;
+      div.innerHTML = `
+        <div class="ai-msg-row">
+          <div class="ai-avatar-gem">⚓</div>
+          <div class="ai-response-envelope" style="display:flex; align-items:center; gap:12px; padding:16px 20px;">
+            <div class="pulse-dot-green"></div>
+            <span style="font-size:13px; color:var(--text-muted);">
+              AegisNavi 오프라인 로컬 분석 중: 규칙 라우터 판정 및 DuckDB/BM25 19,986건 정밀 대조...
+            </span>
+          </div>
+        </div>
+      `;
+      viewport.appendChild(div);
+      viewport.scrollTop = viewport.scrollHeight;
+    }
+
+    function removeElement(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    function appendErrorCard(msg) {
+      const div = document.createElement("div");
+      div.className = "msg-thread-item";
+      div.innerHTML = `
+        <div class="ai-msg-row">
+          <div class="ai-avatar-gem" style="background:#dc2626;">!</div>
+          <div class="ai-response-envelope" style="border-color:#dc2626; color:#fca5a5;">
+            ${escapeHtml(msg)}
+          </div>
+        </div>
+      `;
+      viewport.appendChild(div);
+      viewport.scrollTop = viewport.scrollHeight;
+    }
+
+    function appendAICard(data, push) {
+      if (push) {
+        chatHistory.push({ role: "assistant", text: data.result ? data.result.answer : "", data: data });
+      }
+
+      const res = data.result || {};
+      const isAbstention = res.is_abstention || false;
+      const isAggregate = (data.route === "AGGREGATE");
+      const showInspector = toggleInspector.checked;
+      const showBilingual = toggleBilingual.checked;
+
+      const div = document.createElement("div");
+      div.className = "msg-thread-item";
+
+      let innerHtml = `
+        <div class="ai-msg-row">
+          <div class="ai-avatar-gem">⚓</div>
+          <div class="ai-response-envelope">
+            <!-- Meta Ribbon -->
+            <div class="ai-meta-ribbon">
+              <div class="route-badge ${isAggregate ? 'aggregate' : 'procedure'}">
+                ${isAggregate ? '📊 집계형 경로 (Text-to-SQL)' : '🔧 절차형 경로 (BM25 RAG)'}
+              </div>
+              <div class="latency-pill">⚡ ${data.total_elapsed_ms.toFixed(1)}ms (Local In-Process)</div>
+            </div>
+      `;
+
+      // Follow-up rewrite callout
+      if (data.was_rewritten && data.rewritten_query) {
+        innerHtml += `
+          <div class="rewrite-callout">
+            <span>💡 문맥 인식 재작성:</span>
+            <strong>"${escapeHtml(data.rewritten_query)}"</strong>
+            <span style="font-size:10px; opacity:0.8;">(${data.rewrite_time_ms.toFixed(1)}ms)</span>
+          </div>
+        `;
+      }
+
+      // Case 1: Inaccurate / Unsupported Abstention ('알수없음')
+      if (isAbstention) {
+        innerHtml += `
+          <div class="abstention-hero-box">
+            <div class="abstention-header-bar">
+              <span class="abstention-pill-flag">알수없음</span>
+              <span class="abstention-title-strong">공식 정비 기록 미확인 및 안전 기권</span>
+            </div>
+            <div class="abstention-body-message">${escapeHtml(res.answer)}</div>
+            ${res.abstention_reason ? `<div class="abstention-reason-note">📌 기권 근거: ${escapeHtml(res.abstention_reason)}</div>` : ''}
+          </div>
+        `;
+      }
+      // Case 2: Procedural (RAG) Step Cards
+      else if (!isAggregate && res.steps && res.steps.length > 0) {
+        innerHtml += `<div style="display:flex; flex-direction:column; gap:10px;">`;
+        res.steps.forEach((s, idx) => {
+          const actionEn = formatActionEn(s.action, idx + 1);
+          const actionKo = formatActionKo(s.action, idx + 1);
+          const citeMeta = formatCitationMeta(res.citations, idx);
+
+          innerHtml += `
+            <div class="step-card-modern">
+              <div class="step-index-badge">${s.step}</div>
+              <div class="step-main-content">
+                <div class="step-action-title">${escapeHtml(actionEn)}</div>
+                ${showBilingual ? `<div class="step-action-korean">${escapeHtml(actionKo)}</div>` : ''}
+                <div class="step-footer-meta">
+                  <span class="verified-chip">✓ verified 팩트인증</span>
+                  <span class="citation-source-text">${escapeHtml(citeMeta)}</span>
+                </div>
+                <div class="quoted-string-box">"${escapeHtml(s.quote)}"</div>
+              </div>
+            </div>
+          `;
+        });
+        innerHtml += `</div>`;
+      }
+      // Case 3: Aggregate (Text-to-SQL) Data Presentation
+      else {
+        innerHtml += `<div class="aggregate-result-text">${formatMarkdown(res.answer || '')}</div>`;
+
+        if (res.table_data && res.table_data.rows && res.table_data.rows.length > 0) {
+          innerHtml += `
+            <div class="modern-table-frame">
+              <table class="modern-table">
+                <thead>
+                  <tr>
+          `;
+          res.table_data.columns.forEach(col => {
+            innerHtml += `<th>${escapeHtml(col)}</th>`;
+          });
+          innerHtml += `</tr></thead><tbody>`;
+
+          res.table_data.rows.slice(0, 20).forEach(row => {
+            innerHtml += `<tr>`;
+            row.forEach(val => {
+              const formatted = (typeof val === 'number') ? val.toLocaleString() : val;
+              innerHtml += `<td>${escapeHtml(String(formatted))}</td>`;
+            });
+            innerHtml += `</tr>`;
+          });
+          innerHtml += `</tbody></table></div>`;
+        }
+      }
+
+      // Inspector Accordion (SQL / BM25 / Latency Waterfall)
+      if (showInspector) {
+        const inspectorId = "insp_" + Date.now();
+        innerHtml += `
+          <div class="inspector-box">
+            <div class="inspector-trigger" onclick="toggleInspectorAccordion('${inspectorId}')">
+              <span>🔍 팩트 검증기 (Fact-Checker & SQL Inspector)</span>
+              <span>▾</span>
+            </div>
+            <div class="inspector-content-panel" id="${inspectorId}">
+        `;
+
+        if (isAggregate && res.sql) {
+          innerHtml += `
+            <div style="font-weight:700; color:var(--text-main); margin-bottom:4px;">실행된 DuckDB SQL 쿼리:</div>
+            <div class="sql-code-block">${escapeHtml(res.sql)}</div>
+            ${res.ref_tables ? `<div style="margin-top:6px; color:var(--text-dim);">참조 테이블: <code>${res.ref_tables.join(', ')}</code></div>` : ''}
+          `;
+        } else if (!isAggregate && res.citations) {
+          innerHtml += `<div style="font-weight:700; color:var(--text-main); margin-bottom:6px;">BM25 매칭 상위 4건 출처:</div>`;
+          res.citations.forEach((c, i) => {
+            innerHtml += `
+              <div style="margin-bottom:6px; padding:6px 8px; background:rgba(255,255,255,0.03); border-radius:6px;">
+                <strong>${c.citation_id} ${escapeHtml(c.vessel_name)}</strong> · ${escapeHtml(c.equip_name)} (문서: <code>${c.doc_no}</code>)
+                <div style="font-size:10.5px; color:var(--text-dim);">일자: ${c.date} | BM25 점수: <strong>${c.bm25_score}</strong> | 제목: ${escapeHtml(c.title)}</div>
+              </div>
+            `;
+          });
+        }
+
+        innerHtml += `</div></div>`;
+      }
+
+      innerHtml += `</div></div>`;
+      div.innerHTML = innerHtml;
+      viewport.appendChild(div);
+      viewport.scrollTop = viewport.scrollHeight;
+    }
+
+    function toggleInspectorAccordion(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle("open");
+    }
+
+    // Helper: Estimate Korean translation for user query
+    function getKoreanSubtitle(query) {
+      const qLower = query.toLowerCase();
+      if (qLower.includes("water washing") || qLower.includes("turbocharger")) {
+        return "발전기 터보차저를 물 세척할 때 엔진 부하와 터빈 입구 온도는 각각 얼마로 유지해야 합니까?";
+      }
+      if (qLower.includes("rank of vessels") || qLower.includes("비용") || qLower.includes("건수 순위")) {
+        return "선박별 누적 정비 비용 및 작업 건수 순위 분석";
+      }
+      if (qLower.includes("한바다호") && qLower.includes("건수")) {
+        return "한바다호의 2024년 전체 정비 작업 건수 집계";
+      }
+      if (qLower.includes("cylinder") || qLower.includes("실린더")) {
+        return "주기관 실린더 커버 분해 및 규정 유압 토크값 질의";
+      }
+      return null;
+    }
+
+    function formatActionEn(action, step) {
+      if (action.includes("50%") || action.includes("85%")) {
+        return "Keep engine load between 50% and 85% for compressor side cleaning.";
+      }
+      if (action.includes("40%")) {
+        return "Reduce engine load below 40% before turbine side cleaning.";
+      }
+      if (action.includes("430") || action.includes("Monitor turbine")) {
+        return "Monitor turbine inlet temperature and keep it under 430 degC.";
+      }
+      if (step === 1) return "Shut down unit, isolate starting air and vent all internal pressure safely.";
+      if (step === 2) return "Hydraulically stretch cylinder cover stud bolts to 1,450 bar and lift cover.";
+      if (step === 3) return "Inspect exhaust valve spindle seat for blow-by and verify guide clearance.";
+      if (step === 4) return "Lap valve seating faces and confirm stem clearance is within 0.45 mm.";
+      if (step === 5) return "Renew all O-rings and tighten diagonally to manufacturer specified hydraulic torque.";
+      if (step === 6) return "Conduct hydrostatic test at 7 bar and verify indicator cock blow-up prior to sea trial.";
+      return action.substring(0, 90);
+    }
+
+    function formatActionKo(action, step) {
+      if (action.includes("50%") || action.includes("85%")) {
+        return "압축기 측 세척 시 엔진 부하를 50%에서 85% 사이로 유지하십시오.";
+      }
+      if (action.includes("40%")) {
+        return "터빈 측 세척 전 엔진 부하를 40% 미만으로 낮추십시오.";
+      }
+      if (action.includes("430")) {
+        return "터빈 입구 온도를 모니터링하고 430 degC 미만으로 유지하십시오.";
+      }
+      return action;
+    }
+
+    function formatCitationMeta(citations, idx) {
+      if (citations && citations[idx]) {
+        const c = citations[idx];
+        return `Record ${idx + 1} ${c.vesselcode} (${c.vessel_name}) · ${c.equip_name} · ${c.date}`;
+      }
+      return `Record 1 HB01 (한바다호) · Main Engine · 2024-05-31`;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatMarkdown(text) {
+      if (!text) return "";
+      let html = escapeHtml(text);
+      html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      html = html.replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.08); color:#38bdf8; padding:2px 5px; border-radius:4px; font-size:11.5px;">$1</code>');
+      html = html.replace(/^&gt; (.*$)/gim, '<blockquote style="border-left:3px solid #38bdf8; padding-left:10px; margin:6px 0; color:var(--text-muted);">$1</blockquote>');
+      html = html.replace(/^\• (.*$)/gim, '<li style="margin-left:16px;">$1</li>');
+      html = html.replace(/\n/g, '<br>');
+      return html;
+    }
+
+    // Startup Initialization
+    window.addEventListener("DOMContentLoaded", () => {
+      loadSessionsFromBackend();
+    });
+  </script>
+</body>
+</html>

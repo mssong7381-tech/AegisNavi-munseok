@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "type": "COUNT_AGG",
+    "question": "한바다호의 2024년 전체 정비 작업 건수는 몇 건인가요?",
+    "thought": "vessels 테이블에서 한바다호의 VESSELCODE='HB01'을 찾고, master 테이블에서 REG_DATE가 2024년인 건수를 집계",
+    "sql": "SELECT COUNT(*) AS total_count FROM master m JOIN vessels v ON m.VESSELCODE = v.VESSELCODE WHERE v.VESSEL_NAME = '한바다호' AND m.REG_DATE >= '2024-01-01' AND m.REG_DATE <= '2024-12-31' AND m.DOC_STATUS != 'CANCEL';"
+  },
+  {
+    "id": 2,
+    "type": "RANKING",
+    "question": "2024년 선박별 누적 정비 비용 순위를 보여줘",
+    "thought": "vessels와 master 테이블을 조인하여 선박명별로 TOTAL_COST 합계를 구하고 내림차순 정렬",
+    "sql": "SELECT v.VESSEL_NAME, SUM(m.TOTAL_COST) AS total_expense FROM master m JOIN vessels v ON m.VESSELCODE = v.VESSELCODE WHERE m.REG_DATE >= '2024-01-01' AND m.REG_DATE <= '2024-12-31' AND m.DOC_STATUS != 'CANCEL' GROUP BY v.VESSEL_NAME ORDER BY total_expense DESC;"
+  },
+  {
+    "id": 3,
+    "type": "EQUIP_LIST",
+    "question": "아라호에서 가장 정비가 많이 발생한 기기 상위 5개는?",
+    "thought": "pms 테이블과 vessels 테이블을 조인하여 EQUIP_NAME별 건수를 집계하고 상위 5건 추출",
+    "sql": "SELECT p.EQUIP_NAME, COUNT(*) AS maint_count FROM pms p JOIN vessels v ON p.VESSELCODE = v.VESSELCODE WHERE v.VESSEL_NAME = '아라호' GROUP BY p.EQUIP_NAME ORDER BY maint_count DESC LIMIT 5;"
+  },
+  {
+    "id": 4,
+    "type": "PART_CONSUMPTION",
+    "question": "주기관(Main Engine) 관련 부품 소모 금액 상위 10개 부품은?",
+    "thought": "consumption 테이블과 pms 테이블을 결합하여 주기관 관련 부품 소모 총액을 산출",
+    "sql": "SELECT c.PART_NO, c.PART_NAME, SUM(c.TOTAL_PRICE) AS total_cost, SUM(c.QUANTITY) AS total_qty FROM consumption c JOIN pms p ON c.VESSELCODE = p.VESSELCODE AND c.DOC_NO = p.DOC_NO WHERE p.EQUIP_NAME LIKE '%Main Engine%' OR p.EQUIP_NAME LIKE '%주기관%' GROUP BY c.PART_NO, c.PART_NAME ORDER BY total_cost DESC LIMIT 10;"
+  },
+  {
+    "id": 5,
+    "type": "URGENCY_RATIO",
+    "question": "전체 선박의 긴급(EMERGENCY) 등급 정비 문서 건수는 몇 건인가요?",
+    "thought": "master 테이블에서 URGENCY_LEVEL='EMERGENCY'인 문서 건수 카운트",
+    "sql": "SELECT COUNT(*) AS emergency_count FROM master WHERE URGENCY_LEVEL = 'EMERGENCY' AND DOC_STATUS != 'CANCEL';"
+  },
+  {
+    "id": 6,
+    "type": "CONDITION_F_ABSTENTION",
+    "question": "원자로 냉각재 순환 펌프의 2024년 정비 비용 총액은 얼마인가요?",
+    "thought": "선박 정비 DB에는 상선/디젤기관 정비 이력만 존재하며 '원자로' 설비나 스키마는 존재하지 않음. 조건 F에 따라 기권 처리",
+    "sql": "NOT_RECORDED"
+  }
+]

@@ -1,0 +1,658 @@
+[
+  {
+    "id": 1,
+    "ko": "주기관",
+    "en": "Main Engine",
+    "abbr": "M/E",
+    "code": "ME-01",
+    "desc": "선박 추진용 주기 디젤엔진"
+  },
+  {
+    "id": 2,
+    "ko": "과급기",
+    "en": "Turbocharger",
+    "abbr": "T/C",
+    "code": "TC-01",
+    "desc": "배기가스 구동 흡기 과급기"
+  },
+  {
+    "id": 3,
+    "ko": "실린더 커버",
+    "en": "Cylinder Cover",
+    "abbr": "CYL CVR",
+    "code": "ME-CVR",
+    "desc": "주기관 실린더 헤드 커버 및 밸브 어셈블리"
+  },
+  {
+    "id": 4,
+    "ko": "피스톤",
+    "en": "Piston Assembly",
+    "abbr": "PSTN",
+    "code": "ME-PSTN",
+    "desc": "주기관 피스톤 크라운, 스커트, 피스톤 링"
+  },
+  {
+    "id": 5,
+    "ko": "실린더 라이너",
+    "en": "Cylinder Liner",
+    "abbr": "LINER",
+    "code": "ME-LNR",
+    "desc": "주기관 연소실 실린더 라이너"
+  },
+  {
+    "id": 6,
+    "ko": "배기 밸브",
+    "en": "Exhaust Valve",
+    "abbr": "EXH V/V",
+    "code": "ME-EXH",
+    "desc": "주기관 유압식 배기밸브 및 액추에이터"
+  },
+  {
+    "id": 7,
+    "ko": "연료 분사 밸브",
+    "en": "Fuel Injection Valve",
+    "abbr": "F.I. V/V",
+    "code": "ME-FIV",
+    "desc": "연료유 분사 인젝터 노즐 밸브"
+  },
+  {
+    "id": 8,
+    "ko": "연료 분사 펌프",
+    "en": "Fuel Injection Pump",
+    "abbr": "FIP",
+    "code": "ME-FIP",
+    "desc": "고압 연료 분사 펌프 및 플런저"
+  },
+  {
+    "id": 9,
+    "ko": "크랭크샤프트",
+    "en": "Crankshaft",
+    "abbr": "C/S",
+    "code": "ME-CS",
+    "desc": "주기관 주축 크랭크축 및 메인 베어링"
+  },
+  {
+    "id": 10,
+    "ko": "크로스헤드",
+    "en": "Crosshead",
+    "abbr": "X-HEAD",
+    "code": "ME-XHD",
+    "desc": "크로스헤드 핀 및 슈, 가이드 플레이트"
+  },
+  {
+    "id": 11,
+    "ko": "캠샤프트",
+    "en": "Camshaft",
+    "abbr": "CAM",
+    "code": "ME-CAM",
+    "desc": "밸브 구동 캠축 및 롤러 가이드"
+  },
+  {
+    "id": 12,
+    "ko": "공기 냉각기",
+    "en": "Air Cooler",
+    "abbr": "A/C",
+    "code": "ME-ACLR",
+    "desc": "소기 공기 냉각기 및 냉각관"
+  },
+  {
+    "id": 13,
+    "ko": "소기실",
+    "en": "Scavenge Air Box",
+    "abbr": "SCAV BOX",
+    "code": "ME-SCAV",
+    "desc": "주기관 소기 매니폴드 및 릴리프 밸브"
+  },
+  {
+    "id": 14,
+    "ko": "발전기 엔진",
+    "en": "Generator Engine / Diesel Generator",
+    "abbr": "D/G",
+    "code": "GE-01",
+    "desc": "선내 전력 공급용 4행정 디젤 발전기"
+  },
+  {
+    "id": 15,
+    "ko": "발전기 전기자",
+    "en": "Alternator",
+    "abbr": "ALT",
+    "code": "ALT-01",
+    "desc": "교류 삼상 동기 발전기 회전자 및 고정자"
+  },
+  {
+    "id": 16,
+    "ko": "발전기 조속기",
+    "en": "Governor",
+    "abbr": "GOV",
+    "code": "GOV-01",
+    "desc": "엔진 회전수 및 주파수 제어용 조속기"
+  },
+  {
+    "id": 17,
+    "ko": "보조 보일러",
+    "en": "Auxiliary Boiler",
+    "abbr": "AUX BLR",
+    "code": "BLR-01",
+    "desc": "선내 스팀 생성용 증기 보일러"
+  },
+  {
+    "id": 18,
+    "ko": "배기가스 이코노마이저",
+    "en": "Exhaust Gas Economizer",
+    "abbr": "ECO",
+    "code": "ECO-01",
+    "desc": "항해 중 배기가스 열 회수 보일러"
+  },
+  {
+    "id": 19,
+    "ko": "보일러 버너",
+    "en": "Boiler Burner",
+    "abbr": "BUR",
+    "code": "BLR-BUR",
+    "desc": "보일러 연료 점화 버너 및 점화 플러그"
+  },
+  {
+    "id": 20,
+    "ko": "보일러 급수 펌프",
+    "en": "Boiler Feed Water Pump",
+    "abbr": "BFP",
+    "code": "BLR-FWP",
+    "desc": "보일러 드럼 고압 급수 공급 펌프"
+  },
+  {
+    "id": 21,
+    "ko": "연료유 청정기",
+    "en": "Fuel Oil Purifier",
+    "abbr": "F.O. PUR",
+    "code": "FO-PUR-01",
+    "desc": "원심 분리식 중유 청정기 및 수분 분리기"
+  },
+  {
+    "id": 22,
+    "ko": "윤활유 청정기",
+    "en": "Lube Oil Purifier",
+    "abbr": "L.O. PUR",
+    "code": "LO-PUR-01",
+    "desc": "주기관 및 발전기 윤활유 원심 정제기"
+  },
+  {
+    "id": 23,
+    "ko": "디젤 오일 청정기",
+    "en": "MDO Purifier",
+    "abbr": "DO PUR",
+    "code": "DO-PUR-01",
+    "desc": "경유 청정 분리기"
+  },
+  {
+    "id": 24,
+    "ko": "조타기",
+    "en": "Steering Gear",
+    "abbr": "STG",
+    "code": "STG-01",
+    "desc": "선박 방향 제어 유압 조타 장치 및 틸러"
+  },
+  {
+    "id": 25,
+    "ko": "조타 유압 펌프",
+    "en": "Steering Hydraulic Pump",
+    "abbr": "STG PMP",
+    "code": "STG-HYD",
+    "desc": "조타기 가변토출 피스톤 펌프"
+  },
+  {
+    "id": 26,
+    "ko": "조수기",
+    "en": "Fresh Water Generator",
+    "abbr": "FWG",
+    "code": "FWG-01",
+    "desc": "진공 증발식 선내 청수 조달 장치"
+  },
+  {
+    "id": 27,
+    "ko": "유수분리기",
+    "en": "Oily Water Separator / Bilge Separator",
+    "abbr": "OWS",
+    "code": "OWS-01",
+    "desc": "15ppm 빌지 유수분리 해양오염방지설비"
+  },
+  {
+    "id": 28,
+    "ko": "오일 경보계",
+    "en": "15ppm Bilge Alarm",
+    "abbr": "OCM",
+    "code": "OWS-ALM",
+    "desc": "빌지 배출 농도 감시 모니터링 센서"
+  },
+  {
+    "id": 29,
+    "ko": "빌지 펌프",
+    "en": "Bilge Pump",
+    "abbr": "BILGE PMP",
+    "code": "PMP-BLG",
+    "desc": "기관실 바닥 빌지 웰 배출 펌프"
+  },
+  {
+    "id": 30,
+    "ko": "슬러지 펌프",
+    "en": "Sludge Pump",
+    "abbr": "SLUDGE PMP",
+    "code": "PMP-SLD",
+    "desc": "청정기 슬러지 이송 모노 펌프"
+  },
+  {
+    "id": 31,
+    "ko": "주 공기 압축기",
+    "en": "Main Air Compressor",
+    "abbr": "MAIN COMP",
+    "code": "AC-01",
+    "desc": "30 bar 시동용 고압 공기압축기"
+  },
+  {
+    "id": 32,
+    "ko": "보조 공기 압축기",
+    "en": "Topping Air Compressor",
+    "abbr": "TOPP COMP",
+    "code": "AC-02",
+    "desc": "시동공기 압력 보충용 컴프레서"
+  },
+  {
+    "id": 33,
+    "ko": "시동 공기통",
+    "en": "Main Air Reservoir",
+    "abbr": "AIR RESV",
+    "code": "RES-01",
+    "desc": "30 bar 고압 에어 리시버 탱크"
+  },
+  {
+    "id": 34,
+    "ko": "선용 냉동기",
+    "en": "Provision Refrigerator Plant",
+    "abbr": "REF COMP",
+    "code": "REF-01",
+    "desc": "선원 식자재 냉동창고 냉매 압축기"
+  },
+  {
+    "id": 35,
+    "ko": "기관실 공조기",
+    "en": "Air Conditioning Plant",
+    "abbr": "A/C PLANT",
+    "code": "AC-PLT",
+    "desc": "거주구 냉난방 공조 칠러 유닛"
+  },
+  {
+    "id": 36,
+    "ko": "평형수 처리장치",
+    "en": "Ballast Water Treatment System",
+    "abbr": "BWTS",
+    "code": "BWTS-01",
+    "desc": "전기분해/UV식 선박 평형수 살균 처리기"
+  },
+  {
+    "id": 37,
+    "ko": "평형수 펌프",
+    "en": "Ballast Pump",
+    "abbr": "BLST PMP",
+    "code": "PMP-BLS",
+    "desc": "대용량 평형수 주입 및 배출 펌프"
+  },
+  {
+    "id": 38,
+    "ko": "해수 냉각 펌프",
+    "en": "Sea Water Cooling Pump",
+    "abbr": "SW PMP",
+    "code": "PMP-SW",
+    "desc": "중앙 냉각기 주 해수 순환 펌프"
+  },
+  {
+    "id": 39,
+    "ko": "청수 냉각 펌프",
+    "en": "Fresh Water Cooling Pump",
+    "abbr": "FW PMP",
+    "code": "PMP-FW",
+    "desc": "엔진 자켓 및 저온 청수 순환 펌프"
+  },
+  {
+    "id": 40,
+    "ko": "중앙 냉각기",
+    "en": "Central Fresh Water Cooler",
+    "abbr": "CENTRAL CLR",
+    "code": "CLR-01",
+    "desc": "플레이트식 해수-청수 열교환기"
+  },
+  {
+    "id": 41,
+    "ko": "비상 발전기",
+    "en": "Emergency Diesel Generator",
+    "abbr": "EM'CY GEN",
+    "code": "EMG-01",
+    "desc": "블랙아웃 시 비상 전원 공급용 디젤발전기"
+  },
+  {
+    "id": 42,
+    "ko": "비상 소화 펌프",
+    "en": "Emergency Fire Pump",
+    "abbr": "EMG FIRE PMP",
+    "code": "PMP-EFP",
+    "desc": "선박 비상 화재 진압용 독립 펌프"
+  },
+  {
+    "id": 43,
+    "ko": "화물유 펌프",
+    "en": "Cargo Oil Pump",
+    "abbr": "COP",
+    "code": "COP-01",
+    "desc": "유조선 대용량 원유 하역 스팀터빈 펌프"
+  },
+  {
+    "id": 44,
+    "ko": "스트리핑 펌프",
+    "en": "Stripping Pump",
+    "abbr": "STRP PMP",
+    "code": "COP-STRP",
+    "desc": "탱크 잔유 회수용 왕복동 스트리핑 펌프"
+  },
+  {
+    "id": 45,
+    "ko": "양묘기",
+    "en": "Anchor Windlass",
+    "abbr": "WINDLASS",
+    "code": "WDL-01",
+    "desc": "선수 앵커 투하 및 권양 유압 기기"
+  },
+  {
+    "id": 46,
+    "ko": "계류 윈치",
+    "en": "Mooring Winch",
+    "abbr": "MRG WNC",
+    "code": "WNC-01",
+    "desc": "부두 접안 계류삭 권취 윈치"
+  },
+  {
+    "id": 47,
+    "ko": "데크 크레인",
+    "en": "Deck Crane",
+    "abbr": "DECK CRANE",
+    "code": "CRN-01",
+    "desc": "화물창 및 선상 적재용 유압 크레인"
+  },
+  {
+    "id": 48,
+    "ko": "불활성 가스 장치",
+    "en": "Inert Gas System",
+    "abbr": "IGS",
+    "code": "IGS-01",
+    "desc": "탱커 화물창 폭발방지 불활성가스 발생기"
+  },
+  {
+    "id": 49,
+    "ko": "스크러버",
+    "en": "SOx Scrubber System",
+    "abbr": "SCRUBBER",
+    "code": "EGCS-01",
+    "desc": "배기가스 탈황 세정탑 장치"
+  },
+  {
+    "id": 50,
+    "ko": "분뇨 처리장치",
+    "en": "Sewage Treatment Plant",
+    "abbr": "STP",
+    "code": "STP-01",
+    "desc": "오수 생물학적 호기성 정화 처리기"
+  },
+  {
+    "id": 51,
+    "ko": "선내 소각기",
+    "en": "Incinerator",
+    "abbr": "INCIN",
+    "code": "INC-01",
+    "desc": "폐유 및 폐기물 선내 고온 소각로"
+  },
+  {
+    "id": 52,
+    "ko": "바우 스러스터",
+    "en": "Bow Thruster",
+    "abbr": "B/T",
+    "code": "THR-01",
+    "desc": "선수 횡방향 조종 유도 프로펠러"
+  },
+  {
+    "id": 53,
+    "ko": "가변피치 프로펠러",
+    "en": "Controllable Pitch Propeller",
+    "abbr": "CPP",
+    "code": "CPP-01",
+    "desc": "날개 각도 조절 추진 프로펠러 유압계통"
+  },
+  {
+    "id": 54,
+    "ko": "축 발전기",
+    "en": "Shaft Generator",
+    "abbr": "S/G",
+    "code": "SG-01",
+    "desc": "추진축 회전력을 이용한 선내 발전 장치"
+  },
+  {
+    "id": 55,
+    "ko": "선미관 실링",
+    "en": "Stern Tube Seal",
+    "abbr": "S/T SEAL",
+    "code": "STS-01",
+    "desc": "추진 프로펠러 축 해수 유입 방지 실링"
+  },
+  {
+    "id": 56,
+    "ko": "오일 미스트 감지기",
+    "en": "Oil Mist Detector",
+    "abbr": "OMD",
+    "code": "OMD-01",
+    "desc": "주기관 크랭크케이스 폭발방지 미스트 센서"
+  },
+  {
+    "id": 57,
+    "ko": "점도 조절기",
+    "en": "Viscosity Controller",
+    "abbr": "VISCO",
+    "code": "VISC-01",
+    "desc": "엔진 연료유 적정 분사 점도 자동제어기"
+  },
+  {
+    "id": 58,
+    "ko": "압력 수조",
+    "en": "Hydrophore Unit",
+    "abbr": "HYDRO",
+    "code": "HYD-01",
+    "desc": "선내 음용수 및 위생수 압력 유지 급수 탱크"
+  },
+  {
+    "id": 59,
+    "ko": "온수 가열기",
+    "en": "Calorifier",
+    "abbr": "CALORIFIER",
+    "code": "CAL-01",
+    "desc": "선내 온수 공급용 스팀 전열 가열기"
+  },
+  {
+    "id": 60,
+    "ko": "주 배전반",
+    "en": "Main Switchboard",
+    "abbr": "MSBD",
+    "code": "ELEC-MSB",
+    "desc": "440V 주 배전반 및 ACB 차단기반"
+  },
+  {
+    "id": 61,
+    "ko": "비상 배전반",
+    "en": "Emergency Switchboard",
+    "abbr": "ESBD",
+    "code": "ELEC-ESB",
+    "desc": "비상 전원 투입 및 인터록 배전반"
+  },
+  {
+    "id": 62,
+    "ko": "연료유 이송 펌프",
+    "en": "Fuel Oil Transfer Pump",
+    "abbr": "FO TRANS PMP",
+    "code": "PMP-FOT",
+    "desc": "저장탱크에서 침전탱크로 HFO 이송 펌프"
+  },
+  {
+    "id": 63,
+    "ko": "연료유 가압 펌프",
+    "en": "Fuel Oil Booster Pump",
+    "abbr": "FO BST PMP",
+    "code": "PMP-FOB",
+    "desc": "주기관 투입 전 순환 연료 가압 펌프"
+  },
+  {
+    "id": 64,
+    "ko": "윤활유 주 펌프",
+    "en": "Main Lube Oil Pump",
+    "abbr": "ME LO PMP",
+    "code": "PMP-MLO",
+    "desc": "주기관 베어링 및 피스톤 냉각 윤활유 펌프"
+  },
+  {
+    "id": 65,
+    "ko": "크로스헤드 윤활유 펌프",
+    "en": "Crosshead LO Pump",
+    "abbr": "X-HEAD LO PMP",
+    "code": "PMP-XLO",
+    "desc": "고압 12 bar 크로스헤드 전용 오일 펌프"
+  },
+  {
+    "id": 66,
+    "ko": "캠샤프트 윤활유 펌프",
+    "en": "Camshaft LO Pump",
+    "abbr": "CAM LO PMP",
+    "code": "PMP-CLO",
+    "desc": "캠축 및 배기밸브 액추에이터 오일 펌프"
+  },
+  {
+    "id": 67,
+    "ko": "터닝 기어",
+    "en": "Turning Gear",
+    "abbr": "TURNING",
+    "code": "ME-TRN",
+    "desc": "엔진 정지 시 크랭크축 회전용 전동 감속기"
+  },
+  {
+    "id": 68,
+    "ko": "원격 밸브 제어장치",
+    "en": "Valve Remote Control System",
+    "abbr": "VRCS",
+    "code": "VRC-01",
+    "desc": "화물창 및 밸러스트 밸브 유압 원격 개폐기"
+  },
+  {
+    "id": 69,
+    "ko": "탱크 수위 측정장치",
+    "en": "Tank Level Gauging System",
+    "abbr": "TLGS",
+    "code": "TLG-01",
+    "desc": "레이더 및 압력식 전 탱크 액면 측정계"
+  },
+  {
+    "id": 70,
+    "ko": "기관실 경보 시스템",
+    "en": "Engine Alarm Monitoring System",
+    "abbr": "AMS",
+    "code": "AMS-01",
+    "desc": "무인기관실(UMS) 감시 제어 콘솔"
+  },
+  {
+    "id": 71,
+    "ko": "고압 소화 미스트",
+    "en": "Hyper Mist Fire Extinguishing System",
+    "abbr": "HYPER MIST",
+    "code": "FIRE-MST",
+    "desc": "기관실 국소 화재용 고압 미세물분무 설비"
+  },
+  {
+    "id": 72,
+    "ko": "이산화탄소 전역소화설비",
+    "en": "Total CO2 Fire Fighting System",
+    "abbr": "CO2 SYSTEM",
+    "code": "FIRE-CO2",
+    "desc": "기관실 전역 탄산가스 방출 소화 장치"
+  },
+  {
+    "id": 73,
+    "ko": "비상 차단 밸브",
+    "en": "Quick Closing Valve",
+    "abbr": "QCV",
+    "code": "SAF-QCV",
+    "desc": "비상 화재 시 연료유 탱크 에어 차단 밸브"
+  },
+  {
+    "id": 74,
+    "ko": "방화 댐퍼",
+    "en": "Fire Damper",
+    "abbr": "FIRE DMPR",
+    "code": "SAF-DMP",
+    "desc": "기관실 환기 팬 및 비상 방화 댐퍼"
+  },
+  {
+    "id": 75,
+    "ko": "구명정 엔진",
+    "en": "Lifeboat Engine",
+    "abbr": "L/B ENG",
+    "code": "SAF-LBE",
+    "desc": "구명정 탑재 비상 시동 디젤 엔진"
+  },
+  {
+    "id": 76,
+    "ko": "해수 유입구",
+    "en": "Sea Chest & Strainer",
+    "abbr": "SEA CHEST",
+    "code": "HULL-SCH",
+    "desc": "선저 고/저 해수 흡입구 및 스트레이너"
+  },
+  {
+    "id": 77,
+    "ko": "전식 방지 장치",
+    "en": "Impressed Current Cathodic Protection",
+    "abbr": "ICCP",
+    "code": "HULL-ICP",
+    "desc": "선체 외판 전기도금 부식 방지 양극 장치"
+  },
+  {
+    "id": 78,
+    "ko": "해양생물 부착방지장치",
+    "en": "Marine Growth Prevention System",
+    "abbr": "MGPS",
+    "code": "HULL-MGP",
+    "desc": "해수 배관 따개비 방지 동/알루미늄 전극"
+  },
+  {
+    "id": 79,
+    "ko": "비상 배수 설비",
+    "en": "Emergency Bilge Suction",
+    "abbr": "EMG BILGE",
+    "code": "SAF-EBS",
+    "desc": "기관실 침수 시 주 냉각 해수펌프 직결 밸브"
+  },
+  {
+    "id": 80,
+    "ko": "고압 연료 이중 배관",
+    "en": "Double Wall Fuel Piping Leak Detector",
+    "abbr": "DBL PIPE",
+    "code": "ME-DWP",
+    "desc": "연료유 누설 감지 센서 및 이중관"
+  },
+  {
+    "id": 81,
+    "ko": "크랭크케이스 릴리프 밸브",
+    "en": "Crankcase Relief Valve",
+    "abbr": "CC RELIEF",
+    "code": "ME-CCRV",
+    "desc": "엔진 폭발 방지 화염 역화 방지 밸브"
+  },
+  {
+    "id": 82,
+    "ko": "디젤엔진 분사시기 가변기구",
+    "en": "Variable Injection Timing",
+    "abbr": "VIT",
+    "code": "ME-VIT",
+    "desc": "최대 연소압력 및 연비 최적화 가변기구"
+  }
+]

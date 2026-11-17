@@ -1,0 +1,14 @@
+======================================================================
+🚀 [AegisNavi-Pro Web Server] Starting Marine Engineering AI...
+======================================================================
+[DB] Database already initialized with 26561 master rows.
+[BM25] Initializing BM25 index in memory (k1=1.5, b=0.75, 3x Title weight)...
+[BM25] Loaded 19,986 narrative records into BM25 index in 4.35s.
+
+✅ Server ready! Access via Web Browser:
+
+   👉 http://localhost:8080
+   👉 http://127.0.0.1:8080
+
+[17/Nov/2026 19:53:13] "GET / HTTP/1.1" 200 -
+[17/Nov/2026 19:53:14] "GET / HTTP/1.1" 200 -

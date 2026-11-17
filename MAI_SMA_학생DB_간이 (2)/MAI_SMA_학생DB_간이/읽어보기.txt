@@ -1,0 +1,44 @@
+MAI SMA 학생용 간이 DB (정비 문서 300건)
+작성 2026-11-10 · 간이판(검증 전) — 정식판은 바탕화면\MAI_SMA_학생전달 에 따로 만들어짐
+
+[무엇인가]
+실제 해운선사 선박 6척의 정비이력을 가명처리한 DB에서 정비 문서 300건만 뽑은 연습용 DB이다.
+기기·장비·PMS 코드, 문서번호, 부품번호, 제조사·모델명, 첨부파일명은 모두 가명이다.
+정비 서술(TITLE, WORK_REMARK)은 실제 기록이 아니라 합성 문장이다.
+선박은 V01~V06, 선박명은 VESSEL-A~F 로 표시된다. 수업 밖으로 공유하지 않는다.
+
+[파일]
+deid_maint_300.duckdb   DuckDB 파일 (파이썬: duckdb.connect('deid_maint_300.duckdb'))
+deid_maint_300.xlsx     같은 내용의 엑셀 (시트 6개, 머리행 고정·필터)
+csv\                    같은 내용의 CSV 6개 (UTF-8, 엑셀에서 바로 열림)
+build_db_300_간이.py     만든 스크립트 (고정 시드, 다시 돌리면 같은 결과)
+
+[테이블과 행 수]
+master        300행  정비 문서 1건 = 1행
+pms           671행  정비 작업 라인 1건 = 1행
+approval      897행  결재 단계 1건 = 1행
+attachments   102행  첨부 파일 1건 = 1행 (파일명은 가명)
+consumption    43행  부품 소모 1건 = 1행
+vessels         6행  선박 (집계 열은 이 DB 기준으로 다시 셈)
+
+[연결 규칙]
+테이블은 (VESSELCODE, DOC_NO) 두 열로 잇는다. DOC_NO 는 선박마다 따로 매기므로
+DOC_NO 만으로 이으면 다른 배의 문서가 섞인다. (이 DB에서도 DOC_NO 만 세면 285, 두 열로 세면 300)
+
+[코드 형식]
+MACH_CODE  5자 = 분류 2자(EN 기관, DK 갑판, CG 화물, NV 항해, EL 전기, HL 선체, ET 기타) + 숫자 3자리
+EQUIP_CODE 5자 = E + 숫자 4자리
+MACH_NO, EQUIP_NO  호기 번호(숫자)
+EQUIP_TAG  16자 = 기기 5 + 호기 3 + 장비 5 + 호기 3   예) EN265002E0880001
+PMS_CODE   14자 = 기기 5 + 장비 5 + 일련 4
+
+[이 DB에 일부러 남겨 둔 함정 — 규칙을 모르면 답이 틀린다]
+- 문서 수: DOC_NO 단독 285 대 (VESSELCODE, DOC_NO) 300
+- 발전기 정비 라인: MACH_DESC='GENERATOR ENGINE(DIESEL)' 56 대 LIKE '%GENERATOR%' 144
+- 인공 기준일: 시스템 도입 때 일괄 입력된 LAST_WORK_DATE 가 든 pms 11행
+- 소요시간: master.WORK_BY_HOUR 의 70.0% 가 기본값 1.0 (통계로 쓸 수 없음)
+- 부품 소모: consumption 이 있는 문서 33건 대 master.CONS_YN='Y' 32건 (플래그가 실제와 다름)
+
+[주의]
+- 이 DB의 수치는 전체 DB(문서 26,561건)와 다르다. 정답샘플_200문항.xlsx 의 집계형 정답은
+  전체 DB 기준이므로 이 DB에 그대로 맞지 않는다. 이 DB 기준 정답은 정식판에 따로 넣는다.
